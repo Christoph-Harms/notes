@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<!--suppress JSUnusedGlobalSymbols -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Notes</title>
+
+    <!--Axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!--Vue-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--Note component-->
+    <script src="components/note.js"></script>
+    <!--Indie Flower font-->
+    <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
+    <!--Bulma-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css"
+          integrity="sha256-8B1OaG0zT7uYA572S2xOxWACq9NXYPQ+U5kHPV1bJN4=" crossorigin="anonymous"/>
+    <!--Font Awesome-->
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+<body>
+<div id="app">
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-half">
+                    <textarea
+                        v-model="newNoteText"
+                        class="textarea"
+                        placeholder="Write a new note"
+                    ></textarea>
+                </div>
+                <div class="column is-half">
+                    <div class="columns is-multiline">
+                        <div class="control column">
+                            <div class="columns is-multiline">
+                                <label
+                                    class="column is-one-quarter"
+                                    :class="'has-background-' + type"
+                                    v-for="type in possibleTypes"
+                                    style="padding: .5em"
+                                >
+                                    <input type="radio" name="colorPick" :value="type" v-model="newNoteType">
+                                    {{ type }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="column is-full">
+                            <button
+                                @click="addNote"
+                                class="button is-primary"
+                                style="display: block"
+                            >
+                                Add note
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                <note
+                    class="column is-one-quarter"
+                    v-for="(note, index) in notes"
+                    :prop-text="note.text"
+                    :rotation="getRotation(index)"
+                    :offset="getOffset(index)"
+                    :key="'note' + note.id"
+                    :type="note.type"
+                    :created-at="note.created_at"
+                    :id="note.id"
+                    :index="index"
+                    @delete-note="deleteNote"
+                ></note>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+<script>
+    const api = axios.create({
+        baseURL: 'http://localhost:6060/',
+        timeout: 1000,
+    });
+
+    // noinspection JSUnresolvedFunction
+    new Vue({
+        el: '#app',
+        data: {
+            notes: [],
+            possibleTypes: ['primary', 'info', 'success', 'warning', 'danger'],
+            newNoteText: '',
+            newNoteType: 'primary',
+        },
+
+        created: function () {
+            let zis = this;
+            api.get('/notes')
+                .then(function (response) {
+                    zis.notes = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
+        },
+        methods: {
+            getOffset: function (i) {
+                if (i % 2 === 0) {
+                    return 5;
+                } else if (i % 3 === 0) {
+                    return -5;
+                } else if (i % 5 === 0) {
+                    return -10;
+                } else {
+                    return 0;
+                }
+            },
+            getRotation: function (i) {
+                if (i % 2 === 0) {
+                    return 4;
+                } else if (i % 3 === 0) {
+                    return -3;
+                } else if (i % 5 === 0) {
+                    return 5;
+                } else {
+                    return 0;
+                }
+            },
+            addNote: function () {
+                if (this.newNoteText === '') {
+                    return;
+                }
+
+                let newNote = {
+                    text: this.newNoteText,
+                    type: this.newNoteType,
+                };
+
+                let zis = this;
+                // noinspection JSUnresolvedFunction
+                api.post('/notes', newNote)
+                    .then(function(response) {
+                        zis.notes.unshift(response.data);
+                        zis.newNoteText = '';
+                        zis.newNoteType = 'primary';
+                    })
+                    .catch(function (error){
+                        console.log(error);
+                    });
+            },
+            deleteNote: function(index) {
+                let id = this.notes[index].id;
+                let zis = this;
+                api.delete('/notes/' + id)
+                    .then(function() {
+                        zis.notes.splice(index, 1)
+                    })
+                    .catch(function(error) {
+                        console.log(error)
+                    });
+            }
+        }
+    })
+</script>
+</html>
