@@ -8,7 +8,7 @@ framework (I am experienced with Laravel, though).
 1. Clone the repo: `git clone git@github.com:Christoph-Harms/notes.git`
 2. Change to project dir: `cd notes`
 3. Install the dependencies: `php composer.phar install`
-4. Touch the database file: `touch database/databse.sqlite`
+4. Touch the database file: `touch database/database.sqlite`
 5. Migrate and seed the database: `php artisan migrate --seed`
 6. Start PHP development server, serve from the `public/` directory on port 6060: `php -S localhost:6060 -t public`
 7. Open `frontend/index.html` with your browser
