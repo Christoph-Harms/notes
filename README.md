@@ -1,4 +1,4 @@
-#Notes
+# Notes
 ## What is this?
 Just a simple demo project. An app that let's you take notes, save, edit, and delete them. The notes can have different colors.
 The backend is a [Lumen](https://lumen.laravel.com) app serving a simple JSON api, the frontend is a very simple [Vue js](https://vuejs.org) SPA. It's my first go at the Lumen
