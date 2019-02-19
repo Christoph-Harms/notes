@@ -5,7 +5,7 @@ The backend is a [Lumen](https://lumen.laravel.com) app serving a simple JSON ap
 framework (I am experienced with Laravel, though).
 
 ## How do I run it?
-1. Clone the repo: `git clone <repourl>`
+1. Clone the repo: `git clone git@github.com:Christoph-Harms/notes.git`
 2. Change to project dir: `cd notes`
 3. Install the dependencies: `php composer.phar install`
 4. Migrate and seed the database: `php artisan migrate --seed`
