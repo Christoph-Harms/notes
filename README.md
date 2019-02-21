@@ -14,7 +14,7 @@ framework (I am experienced with Laravel, though).
 7. Open `frontend/index.html` with your browser
 
 ## How do I run the tests?
-Follow steps 1 to 3 from "How do I run it?", then execute `vendor/bin/phpunit`
+Follow steps 1 to 4 from "How do I run it?", then execute `vendor/bin/phpunit`
 
 ## Room for improvement
 * `GET /notes` currently simply returns _all_ notes in the database (sorted newest to oldest), which can potentially lead to very large payloads (and DB loads) 
