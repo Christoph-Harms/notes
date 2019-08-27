@@ -13,6 +13,7 @@ jobs:
       run: touch database/database.sqlite
   test:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - name: run unittests
       run: vendor/bin/phpunit
