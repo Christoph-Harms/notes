@@ -4,14 +4,13 @@ on: [push]
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-latest  
     steps:
     - uses: actions/checkout@v1
     - name: install dependencies
       run: php composer.phar install
     - name: touch db file
       run: touch database/database.sqlite
+  test:
     - name: run unittests
       run: vendor/bin/phpunit
